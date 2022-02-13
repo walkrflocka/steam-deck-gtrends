@@ -3,8 +3,8 @@ library(lubridate)
 
 retrieveDailyTrends <- function(keyword = 'Steam Deck', from = 'yyyy-mm-dd', to = 'yyyy-mm-dd'){
   ## Parse dates as dates
-  fromDate <<- ymd(from) 
-  toDate <<- ymd(to) 
+  fromDate <- ymd(from) 
+  toDate <- ymd(to) 
   
   ## Build out a date range of months and corresponding dates that match the inputs
   dateRange <- seq(floor_date(fromDate, 'month'), ceiling_date(toDate, 'month')-1, by = 1)
@@ -21,7 +21,7 @@ retrieveDailyTrends <- function(keyword = 'Steam Deck', from = 'yyyy-mm-dd', to 
     message('Date range too large for straight daily pull, adjusting...')
 
     ## Split date ranges into months, then pull an index for each month
-    dailies <<- do.call(
+    dailies <- do.call(
       rbind,
       lapply(
         unique(dateRange$monthYear),
@@ -63,8 +63,6 @@ retrieveDailyTrends <- function(keyword = 'Steam Deck', from = 'yyyy-mm-dd', to 
   }
 
   ## Filter down to the input dates...
-  dailies <- dailies[dailies$date %in% dateRange$date, ]
-  
-  ## And filter!
+  dailies <- dailies[as.Date(dailies$date) %in% as.Date(seq(fromDate, toDate, by = 1)), ]
   return(dailies)
 }
